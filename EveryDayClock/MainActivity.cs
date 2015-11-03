@@ -13,66 +13,66 @@ namespace EveryDayClock
     [Activity(Label = "EveryDayClock", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
-        private TextView time_display;
+        public static string AlarmTime;
+
+        private TextView _GoodMorningTime;
+        private TextView _LeftTime;
         private int hour;
         private int minute;
-        private bool _TimePickDialogPopup;
         const int TIME_DIALOG_ID = 0;
-
-        MediaPlayer _player;
-
-        Timer _timer;
 
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Main);
 
-            _player = MediaPlayer.Create(this, Resource.Raw.test);
-
-            var clock = time_display = FindViewById<TextClock>(Resource.Id.textClock1);
-            time_display = FindViewById<TextView>(Resource.Id.textAram);
-            time_display.Click += ((o, e) =>
+            //現在時刻
+            _GoodMorningTime = FindViewById<TextView>(Resource.Id.GoodMorningTime);
+            _GoodMorningTime.Click += ((o, e) =>
             {
-                _TimePickDialogPopup = true;
                 ShowDialog(TIME_DIALOG_ID);
             });
             hour = DateTime.Now.Hour;
             minute = DateTime.Now.Minute;
 
-            //止める
-            var stop = FindViewById<Button>(Resource.Id.Stop);
-            stop.Click += ((o, e) => {
-                _player?.Stop();
-                _player = MediaPlayer.Create(this, Resource.Raw.test);
-            });
+            //残り時間
+            _LeftTime = FindViewById<TextView>(Resource.Id.LeftTime);
 
-            //タイマー
-            _timer = new Timer()
-            {
-                Enabled = true,
-                Interval = 1000
-            };
-            _timer.Elapsed += ((o, e) =>
-            {
-                if (_TimePickDialogPopup) return;
 
-                DateTime c = DateTime.Parse(clock.Text);
-                DateTime t = DateTime.Parse(time_display.Text);
-                if (_player?.IsPlaying == false && c.Hour == t.Hour && c.Minute == t.Minute)
-                {
-                    //_player?.Start();
-                }
+            //お休みボタン
+            var goodNightButton = FindViewById<Button>(Resource.Id.GoodNightButton);
+            goodNightButton.Click += ((o, e) => {
+                var intent = new Intent(this, typeof(GoodMorningActivity));
+                StartActivity(intent);
             });
-            _timer.Start();
 
             UpdateDisplay();
-            _TimePickDialogPopup = false;
         }
+
+        private string GetLeftTime(string nowTime, string alarmTime)
+        {
+            var now = DateTime.Parse(nowTime);
+            var alarm = DateTime.Parse(alarmTime);
+            var span = alarm - now;
+            var leftTime = "";
+            if (span.Ticks > 0)
+            {
+                leftTime = span.ToString();
+            }
+            else
+            {
+                leftTime = "00:00:00";
+            }
+            return leftTime;
+        }
+
         private void UpdateDisplay()
         {
             string time = string.Format("{0}:{1}", hour, minute.ToString().PadLeft(2, '0'));
-            time_display.Text = time;
+            _GoodMorningTime.Text = time;
+            AlarmTime = time;
+
+            _LeftTime.Text = GetLeftTime(DateTime.Now.ToString("HH:mm"), AlarmTime);
         }
 
         private void TimePickerCallback(object sender, TimePickerDialog.TimeSetEventArgs e)
@@ -80,7 +80,6 @@ namespace EveryDayClock
             hour = e.HourOfDay;
             minute = e.Minute;
             UpdateDisplay();
-            _TimePickDialogPopup = false;
         }
 
         protected override Dialog OnCreateDialog(int id)

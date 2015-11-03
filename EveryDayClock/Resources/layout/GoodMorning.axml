@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    tools:actionBarNavMode="list"
+    android:background="@android:color/darker_gray">
     <TextView
-        android:text="Now"
+        android:text="Now Time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView1" />
     <TextClock
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:id="@+id/NowTime"
+        android:id="@+id/textClock"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:gravity="center"
         android:textSize="100sp"
@@ -29,29 +32,27 @@
         android:layout_height="wrap_content"
         android:id="@+id/textView1" />
     <TextView
-        android:id="@+id/GoodMorningTime"
+        android:id="@+id/alarmTime"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="0:00"
         android:gravity="center_horizontal"
-        android:textSize="100sp"
-        android:layout_height="wrap_content" />
+        android:textSize="100sp" />
     <TextView
-        android:id="@+id/textAram1"
-        android:layout_width="match_parent"
-        android:text="2015/11/13"
-        android:gravity="center_horizontal"
-        android:textSize="16sp"
-        android:layout_height="16dp" />
-    <TextView
-        android:id="@+id/LeftTime"
+        android:id="@+id/leftTime"
         android:text="00:00"
         android:gravity="center"
         android:textSize="40sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button
-        android:text="Good Night!"
+        android:text="Cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/GoodNightButton" />
+        android:id="@+id/CancelButton" />
+    <Button
+        android:text="Stop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/StopButton" />
 </LinearLayout>
